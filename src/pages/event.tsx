@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from 'primereact/button';
 import { Card } from 'primereact/card';
 import { Divider } from 'primereact/divider';
@@ -6,6 +6,8 @@ import { Dialog } from 'primereact/dialog';
 import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Calendar } from 'primereact/calendar';
+import { Toast } from 'primereact/toast';
+
 
 const targetDate = new Date('2025-08-30T19:00:00');
 
@@ -19,7 +21,9 @@ export default function EventPage() {
     const [name, setName] = useState('');
     const [contact, setContact] = useState('');
     const [email, setEmail] = useState('');
-    const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const toast = useRef<Toast>(null);
+
 
     type TicketType = 'VIP' | 'GENERAL' | 'EARLYBIRD';
     const [tickets, setTickets] = useState<Record<TicketType, number>>({
@@ -91,6 +95,13 @@ export default function EventPage() {
         setShowPopup(false);
         setShowFinalConfirmation(false);
         resetForm();
+
+        toast.current?.show({
+            severity: 'success',
+            summary: 'Booking Confirmed',
+            detail: 'Your tickets have been successfully booked!',
+            life: 4000,
+        });
     };
 
     const footerContent = showFinalConfirmation ? (
@@ -109,8 +120,8 @@ export default function EventPage() {
             />
         </div>
     ) : (
-        <div className="flex p-2 justify-content-between align-items-center w-full border-top-1 border-gray-200 ml-3">
-            <span className="font-bold text-lg">Total: {totalPrice.toLocaleString()} LKR</span>
+        <div className="flex p-2 justify-content-between align-items-center w-full border-top-1 border-gray-200 ml-3 flex-wrap">
+            <span className="font-bold text-lg mb-2 md:mb-0">Total: {totalPrice.toLocaleString()} LKR</span>
             <Button
                 label="Confirm Booking"
                 icon="pi pi-check"
@@ -135,95 +146,76 @@ export default function EventPage() {
 
     return (
         <div className="p-4" style={{ fontFamily: 'Arial, sans-serif' }}>
-            <div className="flex flex-wrap justify-content-center gap-3">
-                {[...Array(6)].map((_, i) => (
+            <Toast ref={toast} position="top-right" />
+            <div className="flex justify-content-center" style={{ width: '100%' }}>
+                <img
+                    src="images/bg.jpg"
+                    alt="Event Banner"
+                    style={{
+                        width: '1200px',
+                        height: '310px',
+                        objectFit: 'unset',
+
+                    }}
+                />
+            </div>
+            <Divider />
+            <div className="flex md:flex-row justify-content-between gap-5 ml-6 mr-6">
+                <div>
                     <img
-                        key={i}
                         src="images/event-banner.jpg"
                         alt="Event Banner"
+                        className='mt-4'
                         style={{
-                            width: '220px',
-                            height: '200px',
-                            borderRadius: '8px',
-                            boxShadow: '0 4px 8px rgba(0,0,0,0.1)',
+                            width: '270px',
+                            height: '300px',
+                            boxShadow: '0 4px 8px rgba(0,0,0,0.5)',
+                            objectFit: 'cover',
                         }}
                     />
-                ))}
-            </div>
-
-            <div className="flex justify-center items-center mt-4">
-                <div className="flex flex-wrap items-center justify-center gap-3 rounded-xl shadow-lg max-w-lg mx-auto">
-                    <h4 className="text-indigo-700 font-extrabold uppercase tracking-wide text-lg mr-6 mt-5 whitespace-nowrap">
-                        Event will start in
-                    </h4>
-                    <div className="flex gap-5">
-                        {[
-                            { label: 'DAYS', value: countdown.days },
-                            { label: 'HOURS', value: countdown.hours },
-                            { label: 'MINS', value: countdown.minutes },
-                            { label: 'SECS', value: countdown.seconds },
-                        ].map((item, i) => (
-                            <div
-                                key={i}
-                                className="flex flex-col items-center justify-center bg-indigo-50 rounded-2xl shadow-inner p-4 w-20"
-                            >
-                                <span className="text-3xl font-extrabold text-indigo-900 leading-none">
-                                    {item.value.toString().padStart(2, '0')}
-                                </span>
-                                <span className="text-xs font-semibold text-indigo-600 mt-1 tracking-widest">
-                                    {item.label}
-                                </span>
-                            </div>
-                        ))}
-                    </div>
                 </div>
-            </div>
 
-            <Divider />
-
-            <div className="flex p-4 flex-column md:flex-row justify-content-between">
-                <div className="md:w-7 mb-4 md:mb-0">
+                <div className="md:flex-1">
                     <h2 className="text-2xl font-bold mb-3 uppercase">Nuwara Ale</h2>
                     <p className="mb-3 text-justify" style={{ lineHeight: '1.6' }}>
-                        'KUMARAYAN' ORGANIZED BY GLOBAL EVENT SOLUTIONS ON THE 30TH OF AUGUST FROM 07.00PM, AT THE
-                        IMPERIAL COURT, CINNAMON LAKESIDE IS AN EVENT BY THE PRINCES OF ROMANCE IN OUR MUSIC INDUSTRY.
+                        'KUMARAYAN' ORGANIZED BY GLOBAL EVENT SOLUTIONS ON THE 30TH OF AUGUST FROM 07.00PM, AT THE IMPERIAL
+                        COURT, CINNAMON LAKESIDE IS AN EVENT BY THE PRINCES OF ROMANCE IN OUR MUSIC INDUSTRY.
                     </p>
-                    <p className="mb-2 font-semibold text-black">
-                        LOCK THE DATES FOR AN EVENING WITH PRINCES OF ROMANCE
-                    </p>
+                    <p className="mb-2 font-semibold text-black">LOCK THE DATES FOR AN EVENING WITH PRINCES OF ROMANCE</p>
                     <p className="mb-3 text-black">
-                        <strong>Contact For Table Bookings:</strong>{' '}
-                        <span className="text-orange-500">077XXXXXXX</span>
+                        <strong>Contact For Table Bookings:</strong> <span className="text-orange-500">077XXXXXXX</span>
                     </p>
-                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800">
+                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap">
                         <i className="pi pi-calendar text-orange-500" />
                         <span>2025-08-30 19:00:00</span>
                     </div>
-                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800">
+                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap">
                         <i className="pi pi-map-marker text-orange-500" />
                         <span>Sahas Uyana, Kandy</span>
                     </div>
-                    <div className="flex align-items-center gap-2 text-sm text-gray-800">
+                    <div className="flex align-items-center gap-2 text-sm text-gray-800 flex-wrap">
                         <i className="pi pi-users text-orange-500" />
                         <span>Organized by Ever Efficient Business Management</span>
                     </div>
                 </div>
 
-                <Card className="md:w-4 border-round shadow-3 p-3">
-                    <h3 className="text-indigo-800 mb-4 font-semibold">Ticket Prices</h3>
+                <Card
+                    className="md:w-4 sm:w-full shadow-3"
+                >
+                    <h3 className="mb-4 font-semibold">Ticket Prices</h3>
                     {[
                         { type: 'VIP', price: '5000.00 LKR' },
                         { type: 'GENERAL', price: '3000.00 LKR' },
                         { type: 'EARLY BIRD', price: '2500.00 LKR' },
                     ].map((ticket, i) => (
-                        <div key={i} className="flex justify-content-between mb-2">
+                        <div key={i} className="flex justify-content-between mb-3">
                             <span>{ticket.type}</span>
                             <span className="font-bold">{ticket.price}</span>
                         </div>
                     ))}
                     <Button
                         label="Book Now"
-                        className="w-full mt-3 text-white font-bold"
+                        className="w-full mt-4 text-white font-bold"
                         style={{ backgroundColor: '#f97316', borderRadius: '10px' }}
                         onClick={() => setShowPopup(true)}
                     />
@@ -246,9 +238,10 @@ export default function EventPage() {
                     setShowFinalConfirmation(false);
                     resetForm();
                 }}
-                style={{ width: '750px', borderRadius: '12px' }}
+                style={{ width: '90vw', maxWidth: '750px', borderRadius: '12px' }}
                 footer={footerContent}
                 className="p-fluid"
+                blockScroll
             >
                 {showFinalConfirmation ? (
                     <div className="text-center p-5">
@@ -257,7 +250,7 @@ export default function EventPage() {
                         <p className="text-gray-600">Are you sure you want to confirm your ticket booking?</p>
                     </div>
                 ) : (
-                    <div className="p-3" style={{ backgroundColor: '#fafafa', borderRadius: '8px' }}>
+                    <div className="p-3" style={{ backgroundColor: '#fafafa', borderRadius: '8px', color: '#000000' }}>
                         <div className="field mb-3">
                             <label className="font-medium text-sm text-gray-700 mb-1">Reference Number</label>
                             <InputText value={refNumber} readOnly disabled className="w-full" />
@@ -310,21 +303,17 @@ export default function EventPage() {
                             {errors.email && <small className="p-error">{errors.email}</small>}
                         </div>
 
-                        <div className="field mb-3" style={{color: '#000000'}}>
-                            <label className="font-medium text-sm text-gray-700 mb-2">Select Ticket Quantities:</label>
-                            <div className="flex flex-column gap-2">
+                        <div className="field mb-3" style={{ color: '#000000' }}>
+                            <label className="font-medium text-sm mb-2">Select Ticket Quantities:</label>
+                            <div className="flex flex-column gap-3">
                                 {(['VIP', 'GENERAL', 'EARLYBIRD'] as TicketType[]).map((key) => (
                                     <div
                                         key={key}
-                                        className="flex justify-content-between align-items-center px-3 py-2 border-round shadow-1"
+                                        className="flex justify-content-between align-items-center px-4 py-3 border-round shadow-1"
                                         style={{
-                                            minHeight: '48px',
+                                            minHeight: '50px',
                                             backgroundColor:
-                                                key === 'GENERAL'
-                                                    ? '#cceeff'
-                                                    : key === 'EARLYBIRD'
-                                                        ? '#cd7f32'
-                                                        : '#EFBF04',
+                                                key === 'GENERAL' ? '#cceeff' : key === 'EARLYBIRD' ? '#cd7f32' : '#EFBF04',
                                         }}
                                     >
                                         <span className="text-sm text-gray-800 font-medium">
@@ -338,6 +327,9 @@ export default function EventPage() {
                                             max={10}
                                             inputStyle={{ width: '60px' }}
                                             className="w-4rem mr-5"
+                                            buttonLayout="stacked"
+                                            decrementButtonClassName="p-button"
+                                            incrementButtonClassName="p-button"
                                         />
                                     </div>
                                 ))}
