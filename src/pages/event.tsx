@@ -7,6 +7,8 @@ import { InputText } from 'primereact/inputtext';
 import { InputNumber } from 'primereact/inputnumber';
 import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
+import emailjs from '@emailjs/browser';
+
 
 
 const targetDate = new Date('2025-08-30T19:00:00');
@@ -23,6 +25,67 @@ export default function EventPage() {
     const [email, setEmail] = useState('');
     const [, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const toast = useRef<Toast>(null);
+
+
+    const handleFinalBooking = async () => {
+        const newErrors: typeof errors = {};
+    
+        if (!name.trim()) newErrors.name = 'Name is required';
+        if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
+        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
+    
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+            return;
+        }
+    
+        try {
+            // Prepare email data
+            const templateParams = {
+                ref_number: refNumber,
+                name: name,
+                contact: contact,
+                email: email,
+                date: datetime.toLocaleString(),
+                vip_tickets: tickets.VIP,
+                general_tickets: tickets.GENERAL,
+                earlybird_tickets: tickets.EARLYBIRD,
+                total_price: totalPrice.toLocaleString() + ' LKR',
+            };
+    
+            // Send email using EmailJS
+            await emailjs.send(
+                'service_klav3nr', // Replace with your EmailJS service ID
+                'template_abmb1me', // Replace with your EmailJS template ID
+                templateParams,
+                'dhGmVpAlLONpEZzF2' // Replace with your EmailJS user ID
+            );
+    
+            console.log('Booking confirmed and email sent:', { name, contact, email, tickets });
+            setShowPopup(false);
+            setShowFinalConfirmation(false);
+            resetForm();
+    
+            toast.current?.show({
+                severity: 'success',
+                summary: 'Booking Confirmed',
+                detail: 'Your tickets have been successfully booked! A confirmation has been sent to your email.',
+                life: 4000,
+            });
+        } catch (error) {
+            console.error('Failed to send email:', error);
+            
+            toast.current?.show({
+                severity: 'error',
+                summary: 'Email Error',
+                detail: 'There was an issue sending your confirmation email. Your booking is still confirmed.',
+                life: 4000,
+            });
+        }
+    };
+
+    
+    
 
 
     type TicketType = 'VIP' | 'GENERAL' | 'EARLYBIRD';
@@ -79,7 +142,7 @@ export default function EventPage() {
         setErrors({});
     };
 
-    const handleFinalBooking = () => {
+    const handleFinalBooking1 = () => {
         const newErrors: typeof errors = {};
 
         if (!name.trim()) newErrors.name = 'Name is required';
