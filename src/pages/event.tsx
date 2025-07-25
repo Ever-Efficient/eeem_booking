@@ -16,31 +16,39 @@ const targetDate = new Date('2025-08-30T19:00:00');
 export default function EventPage() {
     const [showPopup, setShowPopup] = useState(false);
     const [showFinalConfirmation, setShowFinalConfirmation] = useState(false);
-    const [errors, setErrors] = useState<{ name?: string; contact?: string; email?: string }>({});
+    const [errors, setErrors] = useState<Partial<{
+        nic: string;
+        name: string;
+        contact: string;
+        email: string;
+    }>>({});
+
 
     const [refNumber, setRefNumber] = useState('');
     const [datetime, setDatetime] = useState(new Date());
     const [name, setName] = useState('');
     const [contact, setContact] = useState('');
+    const [nic, setNIC] = useState('');
     const [email, setEmail] = useState('');
     const [, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const toast = useRef<Toast>(null);
 
 
     const handleFinalBooking = async () => {
-        const newErrors: typeof errors = {};
-    
+        const newErrors: typeof errors = {
+            nic: undefined
+        };
+
         if (!name.trim()) newErrors.name = 'Name is required';
         if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
-        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
-    
+        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required'
+
         if (Object.keys(newErrors).length > 0) {
             setErrors(newErrors);
             return;
         }
-    
+
         try {
-            // Prepare email data
             const templateParams = {
                 ref_number: refNumber,
                 name: name,
@@ -52,20 +60,20 @@ export default function EventPage() {
                 earlybird_tickets: tickets.EARLYBIRD,
                 total_price: totalPrice.toLocaleString() + ' LKR',
             };
-    
+
             // Send email using EmailJS
             await emailjs.send(
-                'service_klav3nr', // Replace with your EmailJS service ID
-                'template_abmb1me', // Replace with your EmailJS template ID
+                'service_klav3nr',
+                'template_abmb1me',
                 templateParams,
-                'dhGmVpAlLONpEZzF2' // Replace with your EmailJS user ID
+                'dhGmVpAlLONpEZzF2'
             );
-    
-            console.log('Booking confirmed and email sent:', { name, contact, email, tickets });
+
+            console.log('Booking confirmed and email sent:', { name, contact, email, tickets, nic });
             setShowPopup(false);
             setShowFinalConfirmation(false);
             resetForm();
-    
+
             toast.current?.show({
                 severity: 'success',
                 summary: 'Booking Confirmed',
@@ -74,7 +82,7 @@ export default function EventPage() {
             });
         } catch (error) {
             console.error('Failed to send email:', error);
-            
+
             toast.current?.show({
                 severity: 'error',
                 summary: 'Email Error',
@@ -83,10 +91,6 @@ export default function EventPage() {
             });
         }
     };
-
-    
-    
-
 
     type TicketType = 'VIP' | 'GENERAL' | 'EARLYBIRD';
     const [tickets, setTickets] = useState<Record<TicketType, number>>({
@@ -142,31 +146,6 @@ export default function EventPage() {
         setErrors({});
     };
 
-    const handleFinalBooking1 = () => {
-        const newErrors: typeof errors = {};
-
-        if (!name.trim()) newErrors.name = 'Name is required';
-        if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
-        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
-        console.log('Booking confirmed:', { name, contact, email, tickets });
-        setShowPopup(false);
-        setShowFinalConfirmation(false);
-        resetForm();
-
-        toast.current?.show({
-            severity: 'success',
-            summary: 'Booking Confirmed',
-            detail: 'Your tickets have been successfully booked!',
-            life: 4000,
-        });
-    };
-
     const footerContent = showFinalConfirmation ? (
         <div className="flex justify-content-end gap-2">
             <Button
@@ -192,10 +171,25 @@ export default function EventPage() {
                 style={{ backgroundColor: '#f97316', borderRadius: '10px' }}
                 onClick={() => {
                     const newErrors: typeof errors = {};
+
+                    // Name validation
                     if (!name.trim()) newErrors.name = 'Name is required';
+
+                    // Contact validation
                     if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
+
+                    // Email validation
                     if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
 
+                    // NIC validation
+                    const trimmedNIC = nic.trim().toUpperCase();
+                    const isOldNIC = /^[0-9]{9}V$/.test(trimmedNIC);
+                    const isNewNIC = /^[0-9]{12}$/.test(trimmedNIC);
+                    if (!isOldNIC && !isNewNIC) {
+                        newErrors.nic = 'NIC must be 9 digits + "V" or 12 digits';
+                    }
+
+                    // Set errors or proceed
                     if (Object.keys(newErrors).length > 0) {
                         setErrors(newErrors);
                     } else {
@@ -208,17 +202,16 @@ export default function EventPage() {
     );
 
     return (
-        <div className="p-4" style={{ fontFamily: 'Arial, sans-serif' }}>
+        <div style={{ fontFamily: 'Arial, sans-serif' }}>
             <Toast ref={toast} position="top-right" />
-            <div className="flex justify-content-center" style={{ width: '100%' }}>
+            <div className="flex justify-content-center" style={{ width: '100%', backgroundColor: '#850106' }}>
                 <img
                     src="images/bg.jpg"
                     alt="Event Banner"
                     style={{
-                        width: '1200px',
+                        width: '1100px',
                         height: '310px',
                         objectFit: 'unset',
-
                     }}
                 />
             </div>
@@ -336,6 +329,20 @@ export default function EventPage() {
                                 className={errors.name ? 'p-invalid' : ''}
                             />
                             {errors.name && <small className="p-error">{errors.name}</small>}
+                        </div>
+
+                        <div className="field mb-3">
+                            <label className="font-medium text-sm text-gray-700 mb-1">NIC Number</label>
+                            <InputText
+                                value={nic}
+                                onChange={(e) => {
+                                    setNIC(e.target.value);
+                                    setErrors((prev) => ({ ...prev, nic: undefined }));
+                                }}
+                                placeholder="9XXXXXXXV or 19XXXXXXXXXX"
+                                className={errors?.nic ? 'p-invalid' : ''}
+                            />
+                            {errors?.nic && <small className="p-error">{errors.nic}</small>}
                         </div>
 
                         <div className="field mb-3">
