@@ -1,0 +1,155 @@
+body,
+html,
+#root {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+    box-sizing: border-box;
+}
+
+.EventPage-container {
+    max-width: 1500px;
+    margin: 0 auto;
+}
+
+.banner-image {
+    width: 100%;
+    max-width: 1500px;
+    height: 300px;
+    object-fit: cover;
+}
+
+.main-content {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3rem;
+    padding: 0.5rem;
+    margin: 0 auto;
+    justify-content: center;
+    align-items: center;
+}
+
+.event-image {
+    flex: 1 1 300px;
+    max-width: 300px;
+    height: 340px;
+    object-fit: cover;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.event-description {
+    flex:  1 400px;
+    min-width: 280px;
+    max-width: 600px;
+}
+
+.ticket-card {
+    flex: 1 1 300px;
+    max-width: 400px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+}
+
+.event-description h2 {
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 0.5rem;
+    font-size: 1.8rem;
+}
+
+.event-description p {
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    text-align: justify;
+}
+
+.p-dialog {
+    width: 90vw !important;
+    max-width: 750px !important;
+    border-radius: 12px !important;
+}
+
+.p-fluid .p-inputtext,
+.p-fluid .p-calendar,
+.p-fluid .p-inputnumber {
+    width: 100% !important;
+}
+
+.ticket-type-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;   
+    min-height: 50px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
+}
+
+.ticket-vip {
+    background-color: #efbf04;
+    color: #2a2a2a;
+}
+
+.ticket-general {
+    background-color: #cceeff;
+    color: #2a2a2a;
+}
+
+.ticket-earlybird {
+    background-color: #cd7f32;
+    color: #fff;
+}
+
+.p-inputnumber {
+    width: 60px !important;
+}
+
+.p-invalid {
+    border-color: #dc3545 !important;
+}
+
+.p-dialog-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+@media screen and (max-width: 768px) {
+    .main-content {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .event-image,
+    .ticket-card,
+    .event-description {
+        max-width: 100%;
+        flex: 1 1 100%;
+    }
+
+    .banner-image {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .p-dialog {
+        width: 95vw !important;
+        max-width: 95vw !important;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    .event-description h2 {
+        font-size: 1.4rem;
+    }
+
+    .ticket-type-row {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .p-dialog-footer {
+        justify-content: center;
+    }
+}
