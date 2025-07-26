@@ -9,8 +9,6 @@ import { Calendar } from 'primereact/calendar';
 import { Toast } from 'primereact/toast';
 import emailjs from '@emailjs/browser';
 
-
-
 const targetDate = new Date('2025-08-30T19:00:00');
 
 export default function EventPage() {
@@ -23,7 +21,6 @@ export default function EventPage() {
         email: string;
     }>>({});
 
-
     const [refNumber, setRefNumber] = useState('');
     const [datetime, setDatetime] = useState(new Date());
     const [name, setName] = useState('');
@@ -31,23 +28,10 @@ export default function EventPage() {
     const [nic, setNIC] = useState('');
     const [email, setEmail] = useState('');
     const [, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const toast = useRef<Toast>(null);
 
-
     const handleFinalBooking = async () => {
-        const newErrors: typeof errors = {
-            nic: undefined
-        };
-
-        if (!name.trim()) newErrors.name = 'Name is required';
-        if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
-        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required'
-
-        if (Object.keys(newErrors).length > 0) {
-            setErrors(newErrors);
-            return;
-        }
-
         try {
             const templateParams = {
                 ref_number: refNumber,
@@ -68,7 +52,6 @@ export default function EventPage() {
                 'dhGmVpAlLONpEZzF2'
             );
 
-            console.log('Booking confirmed and email sent:', { name, contact, email, tickets, nic });
             setShowPopup(false);
             setShowFinalConfirmation(false);
             resetForm();
@@ -80,8 +63,6 @@ export default function EventPage() {
                 life: 4000,
             });
         } catch (error) {
-            console.error('Failed to send email:', error);
-
             toast.current?.show({
                 severity: 'error',
                 summary: 'Email Error',
@@ -104,10 +85,7 @@ export default function EventPage() {
         EARLYBIRD: 2500,
     };
 
-    const totalPrice =
-        tickets.VIP * prices.VIP +
-        tickets.GENERAL * prices.GENERAL +
-        tickets.EARLYBIRD * prices.EARLYBIRD;
+    const totalPrice = tickets.VIP * prices.VIP + tickets.GENERAL * prices.GENERAL + tickets.EARLYBIRD * prices.EARLYBIRD;
 
     useEffect(() => {
         if (showPopup) {
@@ -142,62 +120,84 @@ export default function EventPage() {
         setContact('');
         setEmail('');
         setTickets({ VIP: 0, GENERAL: 0, EARLYBIRD: 0 });
+        setNIC('');
         setErrors({});
     };
 
-    const footerContent = showFinalConfirmation ? (
+    const validateAndProceed = () => {
+        const newErrors: typeof errors = {};
+
+        if (!name.trim()) newErrors.name = 'Name is required';
+        if (!/^[0-9]{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
+        if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
+
+        const trimmedNIC = nic.trim().toUpperCase();
+        const isOldNIC = /^[0-9]{9}V$/.test(trimmedNIC);
+        const isNewNIC = /^[0-9]{12}$/.test(trimmedNIC);
+        if (!isOldNIC && !isNewNIC) newErrors.nic = 'NIC must be 9 digits + "V" or 12 digits';
+
+        if (Object.keys(newErrors).length > 0) {
+            setErrors(newErrors);
+        } else {
+            setShowPopup(false);
+            setShowPaymentDialog(true);
+        }
+    };
+
+    const paymentFooter = (
         <div className="flex justify-content-end gap-2">
             <Button
-                label="No, Go Back"
-                icon="pi pi-times"
-                className="p-button-danger"
-                onClick={() => setShowFinalConfirmation(false)}
+                label="Back"
+                icon="pi pi-arrow-left"
+                className="p-button-secondary"
+                onClick={() => {
+                    setShowPaymentDialog(false);
+                    setShowPopup(true);
+                }}
             />
             <Button
-                label="Yes, Confirm Booking"
+                label="Confirm Booking"
+                icon="pi pi-check"
+                className="p-button-success"
+                onClick={() => {
+                    setShowPaymentDialog(false);
+                    setShowPopup(true);
+                    setShowFinalConfirmation(true);
+                }}
+            />
+        </div>
+    );
+
+    const finalFooter = (
+        <div className="flex justify-content-end gap-2">
+            <Button
+                label="OK"
                 icon="pi pi-check"
                 className="p-button-success"
                 onClick={handleFinalBooking}
             />
         </div>
-    ) : (
+    );
+
+    const formFooter = (
         <div className="flex p-2 justify-content-between align-items-center w-full border-top-1 border-gray-200 ml-3 flex-wrap">
             <span className="font-bold text-lg mb-2 md:mb-0">Total: {totalPrice.toLocaleString()} LKR</span>
             <Button
-                label="Confirm Booking"
+                label="Next"
                 icon="pi pi-check"
                 className="border-none text-white px-4 py-2"
                 style={{ backgroundColor: '#f97316', borderRadius: '10px' }}
-                onClick={() => {
-                    const newErrors: typeof errors = {};
-
-                    if (!name.trim()) newErrors.name = 'Name is required';
-
-                    if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
-
-                    if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
-
-                    const trimmedNIC = nic.trim().toUpperCase();
-                    const isOldNIC = /^[0-9]{9}V$/.test(trimmedNIC);
-                    const isNewNIC = /^[0-9]{12}$/.test(trimmedNIC);
-                    if (!isOldNIC && !isNewNIC) {
-                        newErrors.nic = 'NIC must be 9 digits + "V" or 12 digits';
-                    }
-
-                    if (Object.keys(newErrors).length > 0) {
-                        setErrors(newErrors);
-                    } else {
-                        setShowFinalConfirmation(true);
-                    }
-                }}
+                onClick={validateAndProceed}
                 disabled={totalPrice === 0}
             />
         </div>
     );
 
+    const footerContent = showFinalConfirmation ? finalFooter : formFooter;
+
     return (
         <div className="EventPage-container">
-            <Toast ref={toast} position="top-right" />
+            <Toast ref={toast} position="bottom-right" />
             <div className="EventPage-container">
                 <div style={{ backgroundColor: '#850106' }}>
                     <img
@@ -206,7 +206,9 @@ export default function EventPage() {
                         className="banner-image"
                     />
                 </div>
+
                 <Divider />
+
                 <div className="main-content">
                     <img
                         src="images/event-banner.jpg"
@@ -247,7 +249,7 @@ export default function EventPage() {
                         {[
                             { type: 'VIP', price: '5000.00 LKR' },
                             { type: 'GENERAL', price: '3000.00 LKR' },
-                            { type: 'EARLY BIRD', price: '2500.00 LKR - (SOLD OUT)' } ,
+                            { type: 'EARLY BIRD', price: '2500.00 LKR - (SOLD OUT)' },
                         ].map((ticket, i) => (
                             <div key={i} className="flex justify-content-between gap-4 mb-3">
                                 <span>{ticket.type}</span>
@@ -287,8 +289,7 @@ export default function EventPage() {
                     {showFinalConfirmation ? (
                         <div className="text-center p-5">
                             <i className="pi pi-exclamation-triangle text-4xl text-orange-500 mb-3" />
-                            <h5 className="text-xl font-semibold mb-2">Please Confirm Your Booking</h5>
-                            <p className="text-gray-600">Are you sure you want to confirm your ticket booking?</p>
+                            <h5 className="text-xl font-semibold mb-2">Booking Steps Are Completed</h5>
                         </div>
                     ) : (
                         <div className="p-3" style={{ backgroundColor: '#fafafa', borderRadius: '8px', color: '#000000' }}>
@@ -392,6 +393,66 @@ export default function EventPage() {
                             </div>
                         </div>
                     )}
+                </Dialog>
+
+                <Dialog
+                    header="Upload Payment Proof"
+                    visible={showPaymentDialog}
+                    style={{ width: '90vw', maxWidth: '600px', borderRadius: '12px' }}
+                    onHide={() => setShowPaymentDialog(false)}
+                    draggable={false}
+                    footer={paymentFooter}
+                >
+                    <div className="p-2 flex flex-column gap-4">
+                        <Card className='p-4 shadow-3'>
+                            <h2 className="mb-4">Total Amount: <strong>{totalPrice.toLocaleString()} LKR</strong></h2>
+                            <h3 className='ml-2'>Payment Details</h3>
+                            <div className='grid ml-3'>
+                                <div className='col-12 md-col-12'>
+                                    <label>Bank: Pan Asia Bank</label>
+                                </div>
+                                <div className='col-12 md-col-12'>
+                                    <label>Branch: Kundasale </label>
+                                </div>
+                                <div className='col-12 md-col-12'>
+                                    <label>Name: Ever Efficient Business Management (Pvt) Ltd.</label>
+                                </div>
+                                <div className='col-12 md-col-12'>
+                                    <label>Account Number: 2058 1000 0062</label>
+                                </div>
+                            </div>
+                            <h5 className='ml-2'>please send your bank slip to our whatsapp number with your REF-Number</h5>
+                            <h4 className='ml-2'>WhatsApp Number: 077 415 2525</h4>
+                        </Card>
+                        {/*<div>
+                            <p className="text-sm text-gray-600">Please upload your payment receipt to continue.</p>
+                        </div>
+                        <input
+                            type="file"
+                            accept="image/*"
+                            onChange={(e) => {
+                                if (e.target.files?.[0]) {
+                                    setPaymentImage(e.target.files[0]);
+                                }
+                            }}
+                        />
+                        {paymentImage && (
+                            <div className="mt-2 flex flex-column align-items-start gap-3">
+                                <Button
+                                    label="Remove"
+                                    icon="pi pi-times"
+                                    className="p-button-danger text-md p-2"
+                                    style={{ width: '110px', height: '40px' }}
+                                    onClick={() => setPaymentImage(null)}
+                                />
+                                <img
+                                    src={URL.createObjectURL(paymentImage)}
+                                    alt="Payment Proof Preview"
+                                    className="w-full max-h-64 object-contain border-round shadow-2"
+                                />
+                            </div>
+                        )}*/}
+                    </div>
                 </Dialog>
             </div>
         </div>
