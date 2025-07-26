@@ -344,7 +344,7 @@ export default function EventPage() {
                                     setNIC(e.target.value);
                                     setErrors((prev) => ({ ...prev, nic: undefined }));
                                 }}
-                                placeholder="9XXXXXXXV or 19XXXXXXXXXX"
+                                placeholder="9XXXXXXXV"
                                 className={errors?.nic ? 'p-invalid' : ''}
                             />
                             {errors?.nic && <small className="p-error">{errors.nic}</small>}
