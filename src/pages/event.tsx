@@ -215,11 +215,11 @@ export default function EventPage() {
                     />
                     <div className="event-description">
                         <h2 className="text-2xl font-bold mb-2 uppercase">Get Ready For
-                            Unforgettable memories with “Nuwara Aale”
+                            Unforgettable memories with “නුවර ආලේ”
                         </h2>
                         <p className="mb-2 text-justify text-lg" style={{ lineHeight: '1.6' }}>
                             Spend a Magical Evening to Heal Your Soul
-                            Come and experience the magic of “Nuwara Aale” at Sahas Uyana!
+                            Come and experience the magic of “නුවර ආලේ” at Sahas Uyana!
                         </p>
                         <strong>Chapter 01</strong>
                         <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap mt-2">
@@ -247,7 +247,7 @@ export default function EventPage() {
                         {[
                             { type: 'VIP', price: '5000.00 LKR' },
                             { type: 'GENERAL', price: '3000.00 LKR' },
-                            { type: 'EARLY BIRD', price: '2500.00 LKR' },
+                            { type: 'EARLY BIRD', price: '2500.00 LKR - (SOLD OUT)' } ,
                         ].map((ticket, i) => (
                             <div key={i} className="flex justify-content-between gap-4 mb-3">
                                 <span>{ticket.type}</span>
@@ -361,7 +361,7 @@ export default function EventPage() {
                             <div className="field mb-3" style={{ color: '#000000' }}>
                                 <label className="font-medium text-sm mb-2">Select Ticket Quantities:</label>
                                 <div className="flex flex-column gap-3">
-                                    {(['VIP', 'GENERAL', 'EARLYBIRD'] as TicketType[]).map((key) => (
+                                    {(['VIP', 'GENERAL',] as TicketType[]).map((key) => (
                                         <div
                                             key={key}
                                             className="flex justify-content-between align-items-center px-4 py-3 border-round shadow-1"
