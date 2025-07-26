@@ -61,7 +61,6 @@ export default function EventPage() {
                 total_price: totalPrice.toLocaleString() + ' LKR',
             };
 
-            // Send email using EmailJS
             await emailjs.send(
                 'service_klav3nr',
                 'template_abmb1me',
@@ -172,16 +171,12 @@ export default function EventPage() {
                 onClick={() => {
                     const newErrors: typeof errors = {};
 
-                    // Name validation
                     if (!name.trim()) newErrors.name = 'Name is required';
 
-                    // Contact validation
                     if (!/^\d{10}$/.test(contact)) newErrors.contact = 'Contact must be a 10-digit number';
 
-                    // Email validation
                     if (!/\S+@\S+\.\S+/.test(email)) newErrors.email = 'Valid email is required';
 
-                    // NIC validation
                     const trimmedNIC = nic.trim().toUpperCase();
                     const isOldNIC = /^[0-9]{9}V$/.test(trimmedNIC);
                     const isNewNIC = /^[0-9]{12}$/.test(trimmedNIC);
@@ -189,7 +184,6 @@ export default function EventPage() {
                         newErrors.nic = 'NIC must be 9 digits + "V" or 12 digits';
                     }
 
-                    // Set errors or proceed
                     if (Object.keys(newErrors).length > 0) {
                         setErrors(newErrors);
                     } else {
@@ -223,8 +217,8 @@ export default function EventPage() {
                         alt="Event Banner"
                         className='mt-4'
                         style={{
-                            width: '270px',
-                            height: '300px',
+                            width: '300px',
+                            height: '330px',
                             boxShadow: '0 4px 8px rgba(0,0,0,0.5)',
                             objectFit: 'cover',
                         }}
@@ -232,31 +226,42 @@ export default function EventPage() {
                 </div>
 
                 <div className="md:flex-1">
-                    <h2 className="text-2xl font-bold mb-3 uppercase">Nuwara Ale</h2>
-                    <p className="mb-3 text-justify" style={{ lineHeight: '1.6' }}>
-                        'KUMARAYAN' ORGANIZED BY GLOBAL EVENT SOLUTIONS ON THE 30TH OF AUGUST FROM 07.00PM, AT THE IMPERIAL
-                        COURT, CINNAMON LAKESIDE IS AN EVENT BY THE PRINCES OF ROMANCE IN OUR MUSIC INDUSTRY.
+                    <h2 className="text-2xl font-bold mb-2 uppercase">Get Ready For
+                        Unforgettable memories with “Nuwara Aale”
+                    </h2>
+                    <p className="mb-2 text-justify text-lg" style={{ lineHeight: '1.6' }}>
+                        Spend a Magical Evening to Heal Your Soul
+                        Come and experience the magic of “Nuwara Aale” at Sahas Uyana!
                     </p>
-                    <p className="mb-2 font-semibold text-black">LOCK THE DATES FOR AN EVENING WITH PRINCES OF ROMANCE</p>
-                    <p className="mb-3 text-black">
-                        <strong>Contact For Table Bookings:</strong> <span className="text-orange-500">077XXXXXXX</span>
-                    </p>
-                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap">
+                    <strong>Chapter 01</strong>
+                    <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap mt-2">
                         <i className="pi pi-calendar text-orange-500" />
-                        <span>2025-08-30 19:00:00</span>
+                        <span>August 30, 2025 | From 7:00 PM onwards</span>
                     </div>
                     <div className="flex align-items-center gap-2 mb-2 text-sm text-gray-800 flex-wrap">
                         <i className="pi pi-map-marker text-orange-500" />
-                        <span>Sahas Uyana, Kandy</span>
+                        <span>Sahas Uyana - Kandy</span>
                     </div>
-                    <div className="flex align-items-center gap-2 text-sm text-gray-800 flex-wrap">
+                    <div className="flex align-items-center gap-2 text-sm text-gray-800 flex-wrap mb-4">
                         <i className="pi pi-users text-orange-500" />
                         <span>Organized by Ever Efficient Business Management</span>
                     </div>
+                    <strong>For Tickets, Contact Now:</strong>
+                    <div className="flex gap-2 text-black mt-2 mb-2">
+                        <span>📞 Shamila – 077 4152525</span>
+                        <span>📞 Sanduni – 076 0450456</span>
+                    </div>
+                    <span>📞 Dilrukshi – 071 033210</span>
                 </div>
 
                 <Card
                     className="md:w-4 sm:w-full shadow-3"
+                    style={{
+                        width: '300px',
+                        height: '340px',
+                        boxShadow: '0 4px 8px rgba(0,0,0,0.5)',
+                        objectFit: 'cover',
+                    }}
                 >
                     <h3 className="mb-4 font-semibold">Ticket Prices</h3>
                     {[
