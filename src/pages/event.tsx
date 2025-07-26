@@ -37,6 +37,7 @@ export default function EventPage() {
                 ref_number: refNumber,
                 name: name,
                 contact: contact,
+                nic:nic,
                 email: email,
                 date: datetime.toLocaleString(),
                 vip_tickets: tickets.VIP,
@@ -46,10 +47,10 @@ export default function EventPage() {
             };
 
             await emailjs.send(
-                'service_klav3nr',
-                'template_abmb1me',
+                'service_m2e6vsf',
+                'template_xualvii',
                 templateParams,
-                'dhGmVpAlLONpEZzF2'
+                'cP4PpkUdld-Tc1UYZ'
             );
 
             setShowPopup(false);
