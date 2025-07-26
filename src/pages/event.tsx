@@ -281,15 +281,15 @@ export default function EventPage() {
                         setShowFinalConfirmation(false);
                         resetForm();
                     }}
-                    style={{ width: '90vw', maxWidth: '750px', borderRadius: '12px' }}
+                    style={{ width: '60px', maxWidth: '650px', borderRadius: '12px' }}
                     footer={footerContent}
                     className="p-fluid"
                     blockScroll
                 >
                     {showFinalConfirmation ? (
-                        <div className="text-center p-5">
-                            <i className="pi pi-exclamation-triangle text-4xl text-orange-500 mb-3" />
-                            <h5 className="text-xl font-semibold mb-2">Booking Steps Are Completed</h5>
+                        <div className="text-center">
+                            <i style={{color: '#16cf05ff'}} className="pi pi-check-circle text-7xl mb-3" />
+                            <h5 className="text-xl font-semibold mb-2">Booking Steps Are Completed.</h5>
                         </div>
                     ) : (
                         <div className="p-3" style={{ backgroundColor: '#fafafa', borderRadius: '8px', color: '#000000' }}>
@@ -408,21 +408,21 @@ export default function EventPage() {
                             <h2 className="mb-4">Total Amount: <strong>{totalPrice.toLocaleString()} LKR</strong></h2>
                             <h3 className='ml-2'>Payment Details</h3>
                             <div className='grid ml-3'>
-                                <div className='col-12 md-col-12'>
-                                    <label>Bank: Pan Asia Bank</label>
+                                <div className='col-12 md:col-12'>
+                                    <label><strong>Bank:</strong> Pan Asia Bank</label>
                                 </div>
-                                <div className='col-12 md-col-12'>
-                                    <label>Branch: Kundasale </label>
+                                <div className='col-12 md:col-12'>
+                                    <label><strong>Branch:</strong> Kundasale</label>
                                 </div>
-                                <div className='col-12 md-col-12'>
-                                    <label>Name: Ever Efficient Business Management (Pvt) Ltd.</label>
+                                <div className='col-12 md:col-12'>
+                                    <label><strong>Name:</strong> Ever Efficient Business Management (Pvt) Ltd.</label>
                                 </div>
-                                <div className='col-12 md-col-12'>
-                                    <label>Account Number: 2058 1000 0062</label>
+                                <div className='col-12 md:col-12'>
+                                    <label><strong>Account Number:</strong> 2058 1000 0062</label>
                                 </div>
                             </div>
-                            <h5 className='ml-2'>please send your bank slip to our whatsapp number with your REF-Number</h5>
-                            <h4 className='ml-2'>WhatsApp Number: 077 415 2525</h4>
+                            <h4 className='ml-2' style={{ color: 'red' }}>Please send your bank slip to our whatsapp number with your REF-Number</h4>
+                            <h3 className='ml-2'>WhatsApp Number: 077 415 2525</h3>
                         </Card>
                         {/*<div>
                             <p className="text-sm text-gray-600">Please upload your payment receipt to continue.</p>
