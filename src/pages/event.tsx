@@ -37,7 +37,7 @@ export default function EventPage() {
                 ref_number: refNumber,
                 name: name,
                 contact: contact,
-                nic:nic,
+                nic: nic,
                 email: email,
                 date: datetime.toLocaleString(),
                 vip_tickets: tickets.VIP,
@@ -235,7 +235,20 @@ export default function EventPage() {
                         </div>
                         <div className="flex align-items-center gap-2 text-sm text-gray-800 flex-wrap mb-4">
                             <i className="pi pi-users text-orange-500" />
-                            <span>Organized by Ever Efficient Business Management</span>
+                            <span>
+                                Organized by{" "}
+                                <a
+                                    href="https://everefficient.lk"
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="no-underline"
+                                    style={{ color: '#000000ff' }}
+                                    onMouseEnter={(e) => ((e.target as HTMLAnchorElement).style.color = 'blue')}
+                                    onMouseLeave={(e) => ((e.target as HTMLAnchorElement).style.color = '#000000ff')}
+                                >
+                                    EVER EFFICIENT Business Management (Pvt) Ltd
+                                </a>
+                            </span>
                         </div>
                         <strong>For Tickets, Contact Now:</strong>
                         <div className="grid gap-2 text-black mt-3 mb-3">
@@ -289,7 +302,7 @@ export default function EventPage() {
                 >
                     {showFinalConfirmation ? (
                         <div className="text-center">
-                            <i style={{color: '#16cf05ff'}} className="pi pi-check-circle text-7xl mb-3" />
+                            <i style={{ color: '#16cf05ff' }} className="pi pi-check-circle text-7xl mb-3" />
                             <h5 className="text-xl font-semibold mb-2">Booking Steps Are Completed.</h5>
                         </div>
                     ) : (
