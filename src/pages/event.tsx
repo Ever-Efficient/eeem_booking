@@ -263,7 +263,7 @@ export default function EventPage() {
                         {[
                             { type: 'VIP', price: '5000.00 LKR' },
                             { type: 'GENERAL', price: '3000.00 LKR' },
-                            { type: 'EARLY BIRD', price: '2500.00 LKR - (SOLD OUT)' },
+                            { type: 'EARLY BIRD', price: '2500.00 LKR' },
                         ].map((ticket, i) => (
                             <div key={i} className="flex justify-content-between gap-4 mb-3">
                                 <span>{ticket.type}</span>
@@ -376,7 +376,7 @@ export default function EventPage() {
                             <div className="field mb-3" style={{ color: '#000000' }}>
                                 <label className="font-medium text-sm mb-2">Select Ticket Quantities:</label>
                                 <div className="flex flex-column gap-3">
-                                    {(['VIP', 'GENERAL',] as TicketType[]).map((key) => (
+                                    {(['VIP', 'GENERAL', 'EARLYBIRD'] as TicketType[]).map((key) => (
                                         <div
                                             key={key}
                                             className="flex justify-content-between align-items-center px-4 py-3 border-round shadow-1"
