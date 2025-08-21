@@ -83,7 +83,7 @@ export default function EventPage() {
     const prices: Record<TicketType, number> = {
         VIP: 5000,
         GENERAL: 3000,
-        EARLYBIRD: 2500,
+        EARLYBIRD: 2000,
     };
 
     const totalPrice = tickets.VIP * prices.VIP + tickets.GENERAL * prices.GENERAL + tickets.EARLYBIRD * prices.EARLYBIRD;
@@ -263,7 +263,7 @@ export default function EventPage() {
                         {[
                             { type: 'VIP', price: '5000.00 LKR' },
                             { type: 'GENERAL', price: '3000.00 LKR' },
-                            { type: 'EARLY BIRD', price: '2500.00 LKR' },
+                            { type: 'EARLY BIRD', price: '2000.00 LKR' },
                         ].map((ticket, i) => (
                             <div key={i} className="flex justify-content-between gap-4 mb-3">
                                 <span>{ticket.type}</span>
