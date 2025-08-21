@@ -202,7 +202,7 @@ export default function EventPage() {
             <div className="EventPage-container">
                 <div style={{ backgroundColor: '#850106' }}>
                     <img
-                        src="images/bg.png"
+                        src="images/bg.jpg"
                         alt="Event Banner"
                         className="banner-image"
                     />
