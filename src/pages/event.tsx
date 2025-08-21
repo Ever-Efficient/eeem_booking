@@ -197,7 +197,7 @@ export default function EventPage() {
     const footerContent = showFinalConfirmation ? finalFooter : formFooter;
 
     return (
-        <div className="EventPage-container">
+        <>
             <Toast ref={toast} position="bottom-right" />
             <div className="EventPage-container">
                 <div style={{ backgroundColor: '#850106' }}>
@@ -469,6 +469,6 @@ export default function EventPage() {
                     </div>
                 </Dialog>
             </div>
-        </div>
+        </>
     );
 }

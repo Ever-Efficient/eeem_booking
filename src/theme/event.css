@@ -8,15 +8,14 @@ html,
 }
 
 .EventPage-container {
-    max-width: 1500px;
+    max-width: 2000px;
     margin: 0 auto;
 }
 
 .banner-image {
     width: 100%;
-    max-width: 1500px;
+    max-width: 2000px;
     height: 300px;
-    object-fit: cover;
 }
 
 .main-content {
