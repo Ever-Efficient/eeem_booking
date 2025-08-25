@@ -27,9 +27,10 @@ export default function EventPage() {
     const [contact, setContact] = useState('');
     const [nic, setNIC] = useState('');
     const [email, setEmail] = useState('');
-    const [, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
+    const [countdown, setCountdown] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
     const [showPaymentDialog, setShowPaymentDialog] = useState(false);
     const toast = useRef<Toast>(null);
+    
 
     const handleFinalBooking = async () => {
         try {
@@ -209,6 +210,17 @@ export default function EventPage() {
                 </div>
 
                 <Divider />
+
+                <div className="flex flex-column align-items-center justify-content-center mb-4">
+                    <div className="text-6xl font-bold" style={{ color: '#f97316' }}>Countdown to Event</div>
+                    <div className="flex gap-4 text-4xl font-bold">
+                        <div>{countdown.days}d</div>
+                        <div>{countdown.hours}h</div>
+                        <div>{countdown.minutes}m</div>
+                        <div>{countdown.seconds}s</div>
+                    </div>
+                </div>
+
 
                 <div className="main-content">
                     <img
